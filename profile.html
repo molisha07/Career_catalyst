@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management - Career Catalyst</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Career Catalyst</h1>
+        <nav>
+            <ul>
+                <li><a href="homepage.html">Home</a></li>
+                <li><a href="placements.html">Find Placement</a></li>
+                <li><a href="internships.html">Internship Guidance</a></li>
+                <li><a href="login.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>Your Profile</h2>
+
+        <div class="profile-info" id="profile-info">
+            <h3>Profile Details</h3>
+            <ul>
+                <li><strong>ID:</strong> <span id="userId"></span></li>
+                <li><strong>CGPA:</strong> <span id="userCgpa"></span></li>
+                <li><strong>Current Semester:</strong> <span id="userSemester"></span></li>
+                <li><strong>Branch:</strong> <span id="userBranch"></span></li>
+                <li><strong>Experience:</strong> <span id="userExperience"></span></li>
+                <li><strong>Certificates:</strong> <span id="userCertificates"></span></li>
+                <li><strong>Skills:</strong> <span id="userSkills"></span></li>
+            </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="internships.html" class="button">Get Internship Guidance</a>
+            <a href="placements.html" class="button">Find Placement</a>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // Call the function to display the user's information when the page loads
+        displayUser();
+    </script>
+</body>
+</html>

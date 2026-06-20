@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: cc_db
+    restart: always
+    environment:
+      POSTGRES_DB: career_catalyst
+      POSTGRES_USER: cc_admin
+      POSTGRES_PASSWORD: cc_secure_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: cc_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://cc_admin:cc_secure_password_2026@db:5432/career_catalyst
+      - JWT_SECRET=super-secret-key-career-catalyst-platform-2026
+      # - OPENAI_API_KEY=your_key_here # Add key here for full RAG/cloud AI capability
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: cc_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  pgdata:
