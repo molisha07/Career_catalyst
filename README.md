@@ -1,116 +1,138 @@
-# Career Catalyst – AI-Powered Career Platform
+# 🚀 Career Catalyst — AI-Powered Dual-Dashboard Career Platform
 
-**Career Catalyst** is a production-ready, full-stack career development and placement recommendation engine. It enables students to calculate ATS resume scores, identify technical skill gaps, review step-by-step study roadmaps, complete quantitative assessments, practice AI-driven mock interviews, and apply for remote internships or full-time corporate roles.
-
-The application automatically supports a **Dual-Database architecture** (zero-configuration SQLite locally, scalable PostgreSQL in Docker/Production) and a **Dual AI Evaluation engine** (glowing cloud OpenAI/LangChain integrations, falling back to a robust built-in local semantic keyword analyzer if no active API key is provided).
+**Career Catalyst** is a comprehensive, production-ready, full-stack platform designed to bridge the gap between student career development and corporate hiring management. Built using a modern technical stack, it features a dual-dashboard architecture: an interactive career growth portal for students and a complete Hiring Management System (HMS) console for recruiters.
 
 ---
 
-## 🚀 Get Started (Choose Your Run Profile)
+## 🌟 Key Features
 
-### Profile A: Local Zero-Configuration Launch (10 Seconds)
-Perfect for instant testing on your local machine without requiring external databases or tools.
+### 🎓 Student Opportunities & Career Growth Portal
+* **Dashboard Overview**: Dynamic tracking of profile completion percentage, ATS resume scores, placement readiness, and internship readiness metrics.
+* **My Applications (Pipeline Tracking)**: A complete, structured history of all submitted applications tracking:
+  - Title, company, applied date, current status, match percentage, and resume version used.
+  - Visual status pipeline: `Applied ➔ Under Review ➔ Shortlisted ➔ Interview Scheduled ➔ Selected ➔ Rejected`.
+  - Full support to search, filter by status, and safely withdraw applications.
+* **Opportunities Center**: A comprehensive jobs and internship project finder equipped with indicators for Paid/Unpaid stipend, Hybrid/Remote models, and AI profile match percentage.
+* **Saved Opportunities**: Distinct tab-based bookmarks to track saved jobs, internships, and corporate entities.
+* **Resume Center**: Multi-version PDF resume uploader, dynamic profile details builder, and historical ATS suggestion reports.
+* **AI Mock Interviews**: Custom role-based prompt generation with automated grading of typed responses (correctness, tone, communication skills).
+* **Skill Gap Analysis**: Technical evaluation comparing student profiles against industrial requirements, rendering custom roadmaps, and course recommendations.
+* **Assessment Engine**: Quantitative, logical, and technical MCQ exam dashboard generating instant scorecards.
+* **AI Career Chatbot**: RAG-powered interactive career coach leveraging local resource documents.
 
-1. **Start the FastAPI Backend**:
+### 🏢 Recruiter Hiring Management System (HMS)
+* **Hiring Dashboard**: Visual cards showing key metrics (Active Jobs, Active Internships, Total Candidates, Shortlisted, Scheduled Interviews, Hires) and a visual hiring funnel analysis.
+* **Opportunity HMS**: Full posting console to publish, edit, close (toggle active status), or permanently delete job/internship listings.
+* **Candidate Tracking Kanban (ATS)**: Columns matching each application state. Allows recruiters to review complete candidate profiles (CGPA, Branch, Skills, Certifications, Projects, Experience), download active resumes, transition candidates, and trigger interview scheduling.
+* **AI Candidate Ranking**: Automated analysis of resume files and profile metrics against job requirements, providing match scores, qualitative strengths, and hiring recommendations.
+* **Talent Discovery engine**: Advanced multi-filter database queries searching for students by specific branches, minimum CGPA thresholds, skills keywords, and certifications.
+* **Interview Panel**: Meeting scheduler linking Google Meet URLs, performance notes, quantitative grading, and feedback logs.
+* **Company Profile**: Public-facing corporate profile editor to modify sectors, sizes, locations, and descriptions.
+
+---
+
+## 🛠️ Technology Stack & Project Structure
+
+The project is split into a Next.js frontend and a FastAPI backend:
+
+* **Frontend**: Next.js 15 (React), Tailwind CSS, TypeScript, Lucide Icons, HTML5 Semantic Elements.
+* **Backend**: FastAPI (Python), SQLAlchemy ORM, Pydantic data validation, JWT OAuth2 Authentication.
+* **Databases**: SQLite (zero-configuration local database), PostgreSQL (scalable production integration).
+* **AI Engines**: LangChain & OpenAI integrations (glowing cloud evaluation with automatic local semantic fallback if no key is present).
+
+### File Directory Structure
+```
+CC (Workspace Root)
+├── backend/
+│   ├── app/
+│   │   ├── ai/               # AI & ML Engines (Resume, Mock Interview, Skill Gap, Chatbot)
+│   │   ├── auth/             # JWT Authentication & Cryptography utils
+│   │   ├── routers/          # API Controllers (students, jobs, assessments, interviews, etc.)
+│   │   ├── database.py       # Session maker & database engines
+│   │   ├── models.py         # SQLAlchemy schema models
+│   │   ├── schemas.py        # Pydantic schema validation structures
+│   │   └── main.py           # FastAPI entry point
+│   ├── requirements.txt      # Python dependencies list
+│   └── Dockerfile            # Container definition for backend
+├── frontend/
+│   ├── src/
+│   │   ├── app/              # Next.js App Router (Landing, Auth, Dashboards)
+│   │   ├── components/       # Reusable UI dashboard panels & portals
+│   │   └── utils/            # Shared Fetch API client
+│   ├── tailwind.config.ts    # Styling configurations
+│   ├── package.json          # Frontend packages list
+│   └── Dockerfile            # Container definition for frontend
+├── docker-compose.yml        # Multi-container orchestration definition
+└── database_schema.sql       # Pure SQL layout fallback schema
+```
+
+---
+
+## 🚀 Installation & Local Startup
+
+### Option A: Local Run Profile (Zero-Configuration, ~30 Seconds)
+Ideal for local testing without external database dependencies.
+
+1. **Backend Setup**:
    ```bash
    cd backend
+   # Create a virtual environment and install requirements
+   python -m venv .venv
+   .venv\Scripts\activate   # On Windows (use source .venv/bin/activate on Unix)
    pip install -r requirements.txt
+   
+   # Start the development server
    python -m app.main
    ```
-   *The backend will automatically start at `http://localhost:8000`. On startup, it instantly compiles all database tables and seeds them with original candidate records and placement openings.*
+   *The backend will automatically start at `http://localhost:8000`. On startup, it checks for an existing SQLite database. If none is found, it automatically compiles all tables and seeds mock student and company datasets.*
 
-2. **Start the Next.js 15 Client**:
+2. **Frontend Setup**:
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
-   *The frontend client will automatically start at `http://localhost:3000` with visual dark layouts and auto-refresh mechanisms.*
+   *The Next.js client will start at `http://localhost:3000`.*
 
 ---
 
-### Profile B: Full Multi-Container Compose Launch
-Perfect for production-grade testing under isolated environments mimicking cloud services.
+### Option B: Docker Containerized Profile (Production-grade Orchestration)
+Ideal for testing under production configurations with an isolated database.
 
-1. **Spin up containers**:
-   From the workspace root directory:
-   ```bash
-   docker-compose up --build
-   ```
-   This orchestrates:
-   * **Database Container**: Isolated PostgreSQL service.
-   * **Backend Container**: FastAPI server connected to PG.
-   * **Frontend Container**: Next.js client with volume mapping.
+From the workspace root directory:
+```bash
+docker-compose up --build
+```
+This command automatically spins up and links:
+1. **`db`**: PostgreSQL container with isolated volume persistence.
+2. **`backend`**: FastAPI container connected to PostgreSQL.
+3. **`frontend`**: Next.js client served locally.
 
 ---
 
 ## 🔑 Pre-Seeded Accounts for Testing
 
-On database initialization, the system automatically seeds the database with the original dataset from your static files. You can log in using these credentials instantly:
+On database compilation, the platform automatically registers the following credential profiles to let you test dashboard configurations instantly:
 
 ### Student Accounts
-| Email | Password | CGPA | Branch |
+| Email | Password | Academic Branch | CGPA |
 | :--- | :--- | :--- | :--- |
-| **molisha@somaiya.edu** | `molisha123` | 7.9 | Artificial Intelligence & Data Science |
-| **harshi@somaiya.edu** | `harshi123` | 8.0 | Computer Science |
-| **krisha@somaiya.edu** | `krisha123` | 8.8 | Electronics |
-| **krish@somaiya.edu** | `password123` | 5.5 | Information Technology |
+| **molisha@somaiya.edu** | `molisha123` | Artificial Intelligence & Data Science | 7.9 |
+| **harshi@somaiya.edu** | `harshi123` | Computer Science | 8.0 |
+| **krisha@somaiya.edu** | `krisha123` | Electronics | 8.8 |
+| **krish@somaiya.edu** | `password123` | Information Technology | 5.5 |
 
 ### Recruiter Accounts
-| Email | Password | Linked Corporate Entity | Designation |
+| Email | Password | Company Entity | Designation |
 | :--- | :--- | :--- | :--- |
 | **recruiter.google@google.com** | `recruitergoogle` | GOOGLE | Lead Recruiter |
 | **recruiter.amazon@amazon.com** | `recruiteramazon` | AMAZON | Talent Advisor |
 
 ---
 
-## 🛠️ System Architecture & API Gateway
+## 🧪 API Verification & Testing
 
-```
-CC (Workspace root)
-├── backend/
-│   ├── app/
-│   │   ├── ai/               # AI & ML Engines (Resume, Mock Interview, Skill Gap, RAG Chat)
-│   │   ├── auth/             # Password & JWT token logic
-│   │   ├── routers/          # API Controllers (students, jobs, assessments, interviews, etc.)
-│   │   ├── database.py       # Session maker & connection engines
-│   │   ├── models.py         # SQLAlchemy DB schemas
-│   │   ├── schemas.py        # Pydantic request models
-│   │   └── main.py           # FastAPI server entry point
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── app/              # Next.js 15 routing (Landing, Login, Register, Dashboards)
-│   │   ├── components/       # Visual subpage modules (Assessments, Mock Interviews, Skill Gap)
-│   │   └── utils/            # Centered fetch communication client
-│   └── package.json
-```
-
-### Core API Endpoints Index
-* **Authentication**:
-  * `POST /api/auth/signup` - Creates credentials, automatically registers profiles.
-  * `POST /api/auth/login` - Returns JWT bearer token.
-  * `GET /api/auth/me` - Verifies token validity and user context.
-* **Student Operations**:
-  * `GET /api/students/profile` - Fetches academic CGPA, semester, branch.
-  * `PUT /api/students/profile` - Updates fields, auto-recalculating profile completeness.
-  * `POST /api/students/resume/analyze` - Parses PDF resumes, returns ATS reports.
-  * `GET /api/students/skill-gap` - Returns required skills vs student skills, course suggestions, and roadmaps.
-* **Testing & Assessments**:
-  * `GET /api/assessments/questions` - Pulls questions per category (Aptitude, Logical, Tech).
-  * `POST /api/assessments/submit` - Evaluates choices, returns scorecard analysis.
-* **AI Interactive mock rounds**:
-  * `GET /api/interviews/questions` - Renders custom HR or Technical prompts.
-  * `POST /api/interviews/submit` - Scores typed answers, yields correctness and communication grids.
-* **RAG Career Chatbot**:
-  * `POST /api/chats/message` - Searches local guidelines vector space and generates mentor advice.
-
----
-
-## 🧪 Verifications & Tests
-
-To execute tests and verify API operations:
-1. Ensure packages in `backend/requirements.txt` are active.
-2. Spin up FastAPI locally or via containers.
-3. Test JWT schemas and API controllers by visiting the interactive Swagger UI:
-   `http://localhost:8000/docs`
+1. **Swagger UI Doc Panel**:
+   FastAPI exposes interactive Open API documentation. Visit `http://localhost:8000/docs` to test endpoints, headers, and request models directly from your browser.
+2. **Next.js Production Build**:
+   Verify frontend production builds by running `npm run build` inside the `frontend` folder to guarantee clean imports and routing compliance.
